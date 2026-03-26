@@ -1,8 +1,7 @@
-import 'package:expense_tracker/expenses.dart';
 import 'package:uuid/uuid.dart';
-
-enum category {food, travel, leisure, work}
 const uuid = Uuid();
+enum Category {food, travel, leisure, work}
+
 class Expense{
    Expense({required this.title,required this.amount, 
    required this.date, required this.category}) : id = uuid.v4();
@@ -11,6 +10,6 @@ class Expense{
   final String title;
   final double amount;
   final DateTime date;
-  final String category; 
+  final Category category; 
 
 }
