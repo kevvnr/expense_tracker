@@ -18,9 +18,10 @@ class _ExpensesState extends State<Expenses>{
       _registeredExpenses.add(expense);
     });
   }
-
   void _openAddExpenseOverlay(){
-    showModalBottomSheet(context: context,
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
     builder: (ctx) => NewExpense(onAddExpense: _addExpense));
   }
   final List<Expense> _registeredExpenses = [
