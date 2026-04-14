@@ -2,6 +2,7 @@ import 'package:expense_tracker/models/expense.dart';
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expense_tracker/widgets/new_expenses.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/number_symbols_data.dart';
 
 class Expenses extends StatefulWidget{
   const Expenses({super.key});
@@ -26,9 +27,23 @@ class _ExpensesState extends State<Expenses>{
   }
 
 void _removeExpense(Expense expense){
+  final expenseIndex = _registeredExpenses.indexOf(expense);
   setState(() {
     _registeredExpenses.remove(expense);
   });
+  ScaffoldMessenger.of(context).clearSnackBars();
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      duration:Duration(seconds: 3),
+      content: Text("Expense Deleted!"),
+      action: SnackBarAction(label: "Undo",
+      onPressed: (){
+setState(() {
+  _registeredExpenses.insert(expenseIndex, expense);
+});
+      }),
+    ),
+    );
 }
 
   final List<Expense> _registeredExpenses = [
@@ -54,6 +69,14 @@ void _removeExpense(Expense expense){
 
   @override
   Widget build(BuildContext context) {
+Widget mainContent = const Center(
+  child: Text("No Expense.. Click + to add one!"),
+);
+if (_registeredExpenses.isNotEmpty) {
+  mainContent =ExpensesList(expenses: _registeredExpenses,
+   onRemoveExpense: _removeExpense,);
+}
+
     return Scaffold(
       appBar:AppBar(
         title: const Text("Expense Tracker"),
@@ -67,9 +90,7 @@ void _removeExpense(Expense expense){
       children: [
         Text('CHART GOES HERE'),
         Expanded(
-          child: ExpensesList(
-            onRemoveExpense: _removeExpense,
-            expenses: _registeredExpenses)),
+          child: mainContent),
       ],
     ),
     );
